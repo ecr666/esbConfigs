@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<api xmlns="http://ws.apache.org/ns/synapse"
+     name="ClientServiceAPI"
+     context="/clientservice">
+   <resource methods="OPTIONS DELETE GET" uri-template="/clients/{id}">
+      <inSequence>
+         <property name="REST_URL_POSTFIX"
+                   expression="fn:concat('/customers/',get-property('uri.var.id'))"
+                   scope="axis2"
+                   type="STRING"/>
+         <send>
+            <endpoint>
+               <address uri="http://localhost:9764/jaxrs_basic/services/customers/customerservice/"/>
+            </endpoint>
+         </send>
+      </inSequence>
+      <outSequence>
+         <send/>
+      </outSequence>
+   </resource>
+   <resource methods="POST PUT" uri-template="/clients">
+      <inSequence>
+         <property name="REST_URL_POSTFIX"
+                   value="/customers"
+                   scope="axis2"
+                   type="STRING"/>
+         <switch source="$ctx:REST_METHOD">
+            <case regex="POST">
+               <payloadFactory>
+                  <format>
+                     <Customer xmlns="">
+                        <name>$1</name>
+                     </Customer>
+                  </format>
+                  <args>
+                     <arg expression="//addClient/name"/>
+                  </args>
+               </payloadFactory>
+            </case>
+            <case regex="PUT">
+               <payloadFactory>
+                  <format>
+                     <Customer xmlns="">
+                        <id>$1</id>
+                        <name>$2</name>
+                     </Customer>
+                  </format>
+                  <args>
+                     <arg expression="//updateClient/id"/>
+                     <arg expression="//updateClient/name"/>
+                  </args>
+               </payloadFactory>
+            </case>
+         </switch>
+         <send>
+            <endpoint>
+               <address uri="http://localhost:9764/jaxrs_basic/services/customers/customerservice/"/>
+            </endpoint>
+         </send>
+      </inSequence>
+      <outSequence>
+         <send/>
+      </outSequence>
+   </resource>
+   <resource methods="POST" uri-template="/tsystem">
+      <inSequence>
+         <property name="REST_URL_POSTFIX"
+                   expression="fn:concat('/customers/',//getClient/id)"
+                   scope="axis2"
+                   type="STRING"/>
+         <property name="HTTP_METHOD" value="GET" scope="axis2" type="STRING"/>
+         <property name="Content-Type"
+                   value="application/xml; charset=utf-8"
+                   scope="transport"
+                   type="STRING"/>
+         <property name="messageType"
+                   value="application/xml"
+                   scope="axis2"
+                   type="STRING"/>
+         <send>
+            <endpoint>
+               <address uri="http://localhost:9764/jaxrs_basic/services/customers/customerservice/"
+                        format="rest"/>
+            </endpoint>
+         </send>
+      </inSequence>
+      <outSequence>
+         <send/>
+      </outSequence>
+   </resource>
+   <resource methods="POST" uri-template="/jsontest">
+      <inSequence>
+         <property name="REST_URL_POSTFIX"
+                   expression="fn:concat('/customers/',//id)"
+                   scope="axis2"
+                   type="STRING"/>
+         <property name="HTTP_METHOD" value="GET" scope="axis2" type="STRING"/>
+         <property name="Content-Type"
+                   value="application/xml"
+                   scope="transport"
+                   type="STRING"/>
+         <property name="messageType"
+                   value="application/xml"
+                   scope="axis2"
+                   type="STRING"/>
+         <send>
+            <endpoint>
+               <address uri="http://localhost:9764/jaxrs_basic/services/customers/customerservice/"
+                        format="rest"/>
+            </endpoint>
+         </send>
+      </inSequence>
+   </resource>
+</api>

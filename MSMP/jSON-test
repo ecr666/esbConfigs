@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://ws.apache.org/ns/synapse">
+   <registry provider="org.wso2.carbon.mediation.registry.WSO2Registry">
+      <parameter name="cachableDuration">15000</parameter>
+   </registry>
+   <proxy name="jsonproxy"
+          transports="https http"
+          startOnLoad="true"
+          trace="enable"
+          statistics="enable">
+      <description/>
+      <target>
+         <inSequence>
+            <property name="FORCE_SC_ACCEPTED" value="true" scope="axis2"/>
+            <store messageStore="RabbitMS"/>
+         </inSequence>
+      </target>
+   </proxy>
+   <endpoint name="JAXRS_basic">
+      <address uri="http://localhost:9763/jaxrs_basic-5.2.0/services/customers/customerservice/customers"/>
+   </endpoint>
+   <sequence name="replySequence">
+      <log level="full">
+         <property name="REPLY" value="MESSAGE"/>
+      </log>
+      <drop/>
+   </sequence>
+   <sequence name="fault">
+      <log level="full">
+         <property name="MESSAGE" value="Executing default &#34;fault&#34; sequence"/>
+         <property name="ERROR_CODE" expression="get-property('ERROR_CODE')"/>
+         <property name="ERROR_MESSAGE" expression="get-property('ERROR_MESSAGE')"/>
+      </log>
+      <drop/>
+   </sequence>
+   <sequence name="main">
+      <log/>
+      <drop/>
+   </sequence>
+   <messageStore class="org.apache.synapse.message.store.impl.rabbitmq.RabbitmqStore"
+                 name="RabbitMS">
+      <parameter name="store.rabbitmq.host.name">localhost</parameter>
+      <parameter name="store.rabbitmq.queue.name">ESBStore</parameter>
+      <parameter name="store.rabbitmq.host.port">5672</parameter>
+   </messageStore>
+   <messageProcessor class="org.apache.synapse.message.processor.impl.forwarder.ScheduledMessageForwardingProcessor"
+                     name="RabbitMP"
+                     targetEndpoint="JAXRS_basic"
+                     messageStore="RabbitMS">
+      <parameter name="max.delivery.drop">Disabled</parameter>
+      <parameter name="message.processor.reply.sequence">replySequence</parameter>
+      <parameter name="client.retry.interval">1000</parameter>
+      <parameter name="interval">1000</parameter>
+      <parameter name="is.active">true</parameter>
+   </messageProcessor>
+</definitions>

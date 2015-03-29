@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://ws.apache.org/ns/synapse">
+   <registry provider="org.wso2.carbon.mediation.registry.WSO2Registry">
+      <parameter name="cachableDuration">15000</parameter>
+   </registry>
+   <taskManager provider="org.wso2.carbon.mediation.ntask.NTaskTaskManager">
+      <parameter name="cachableDuration">15000</parameter>
+   </taskManager>
+   <proxy name="AMQPSimpleProducer"
+          transports="http"
+          startOnLoad="true"
+          trace="disable">
+      <description/>
+      <target>
+         <inSequence>
+            <sequence key="incoming"/>
+         </inSequence>
+         <outSequence>
+            <drop/>
+         </outSequence>
+      </target>
+   </proxy>
+   <endpoint name="SimpleStockQuoteService">
+      <address uri="http://localhost:9000/services/SimpleStockQuoteService"/>
+   </endpoint>
+   <sequence name="incoming" onError="back-end-fault">
+      <property name="FORCE_SC_ACCEPTED" value="true" scope="axis2"/>
+      <property name="OUT_ONLY" value="true"/>
+      <send>
+         <endpoint>
+            <address uri="rabbitmq:/AMQPProxy?rabbitmq.server.host.name=localhost&amp;rabbitmq.server.port=5672&amp;rabbitmq.queue.name=exclusiveQueue"/>
+         </endpoint>
+      </send>
+   </sequence>
+   <sequence name="back-end-fault">
+      <property name="FORCE_SC_ACCEPTED" value="true" scope="axis2"/>
+      <property name="OUT_ONLY" value="true"/>
+      <log level="full">
+         <property name="MSG" value="Unable to send to the endpoint"/>
+      </log>
+      <send>
+         <endpoint>
+            <address uri="rabbitmq:/AMQPProxy?rabbitmq.server.host.name=localhost&amp;rabbitmq.server.port=5672&amp;rabbitmq.queue.name=faultStorageQueue"/>
+         </endpoint>
+      </send>
+   </sequence>
+   <sequence name="fault">
+      <log level="full">
+         <property name="MESSAGE" value="Executing default &#34;fault&#34; sequence"/>
+         <property name="ERROR_CODE" expression="get-property('ERROR_CODE')"/>
+         <property name="ERROR_MESSAGE" expression="get-property('ERROR_MESSAGE')"/>
+      </log>
+      <drop/>
+   </sequence>
+   <sequence name="main">
+      <log/>
+      <drop/>
+   </sequence>
+</definitions>

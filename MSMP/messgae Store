@@ -1,0 +1,6 @@
+<messageStore class="org.apache.synapse.message.store.impl.rabbitmq.RabbitmqStore"
+                 name="RabbitMS">
+                  <parameter name="store.rabbitmq.host.name">localhost</parameter>
+  <parameter name="store.rabbitmq.host.port">5672</parameter>
+  <parameter name="store.rabbitmq.queue.name">ESBStore</parameter>
+</messageStore>

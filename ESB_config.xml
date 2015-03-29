@@ -1,0 +1,5 @@
+<mqtt.publish configKey="mqtt-connect">
+         <topic>esbTopic</topic>
+         <msg>MQTT connector message</msg>
+         <disconnectAfter>true</disconnectAfter>
+      </mqtt.publish>

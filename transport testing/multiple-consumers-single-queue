@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://ws.apache.org/ns/synapse">
+   <registry provider="org.wso2.carbon.mediation.registry.WSO2Registry">
+      <parameter name="cachableDuration">15000</parameter>
+   </registry>
+   <taskManager provider="org.wso2.carbon.mediation.ntask.NTaskTaskManager">
+      <parameter name="cachableDuration">15000</parameter>
+   </taskManager>
+   <proxy name="AMQPProxyConsumer1"
+          transports="rabbitmq"
+          startOnLoad="true"
+          trace="enable">
+      <description/>
+      <target>
+         <inSequence>
+            <log level="full"/>
+            <property name="OUT_ONLY" value="true"/>
+            <property name="FORCE_SC_ACCEPTED" value="true" scope="axis2"/>
+            <send>
+               <endpoint>
+                  <address uri="rabbitmq:/AMQPProxy?rabbitmq.server.host.name=localhost&amp;rabbitmq.server.port=5672&amp;rabbitmq.queue.name=queueConsumer1&amp;rabbitmq.exchange.name=exchange-test"/>
+               </endpoint>
+            </send>
+         </inSequence>
+      </target>
+      <parameter name="rabbitmq.queue.name">queueCommon</parameter>
+      <parameter name="rabbitmq.connection.factory">AMQPConnectionFactory</parameter>
+      <parameter name="rabbitmq.exchange.name">exchange1</parameter>
+   </proxy>
+   <proxy name="AMQPProxyConsumer2"
+          transports="rabbitmq"
+          startOnLoad="true"
+          trace="enable">
+      <description/>
+      <target>
+         <inSequence>
+            <log level="full"/>
+            <property name="OUT_ONLY" value="true"/>
+            <property name="FORCE_SC_ACCEPTED" value="true" scope="axis2"/>
+            <send>
+               <endpoint>
+                  <address uri="rabbitmq:/AMQPProxy?rabbitmq.server.host.name=localhost&amp;rabbitmq.server.port=5672&amp;rabbitmq.queue.name=queueConsumer2&amp;rabbitmq.exchange.name=exchange-test"/>
+               </endpoint>
+            </send>
+         </inSequence>
+      </target>
+      <parameter name="rabbitmq.queue.name">queueCommon</parameter>
+      <parameter name="rabbitmq.connection.factory">AMQPConnectionFactory</parameter>
+      <parameter name="rabbitmq.exchange.name">exchange1</parameter>
+   </proxy>
+   <proxy name="AMQPProxyConsumer3"
+          transports="rabbitmq"
+          startOnLoad="true"
+          trace="enable">
+      <description/>
+      <target>
+         <inSequence>
+            <log level="full"/>
+            <property name="OUT_ONLY" value="true"/>
+            <property name="FORCE_SC_ACCEPTED" value="true" scope="axis2"/>
+            <send>
+               <endpoint>
+                  <address uri="rabbitmq:/AMQPProxy?rabbitmq.server.host.name=localhost&amp;rabbitmq.server.port=5672&amp;rabbitmq.queue.name=queueConsumer3&amp;rabbitmq.exchange.name=exchange-test"/>
+               </endpoint>
+            </send>
+         </inSequence>
+      </target>
+      <parameter name="rabbitmq.queue.name">queueCommon</parameter>
+      <parameter name="rabbitmq.connection.factory">AMQPConnectionFactory</parameter>
+      <parameter name="rabbitmq.exchange.name">exchange1</parameter>
+   </proxy>
+   <endpoint name="SimpleStockQuoteService">
+      <address uri="http://localhost:9000/services/SimpleStockQuoteService"/>
+   </endpoint>
+   <sequence name="fault">
+      <log level="full">
+         <property name="MESSAGE" value="Executing default &#34;fault&#34; sequence"/>
+         <property name="ERROR_CODE" expression="get-property('ERROR_CODE')"/>
+         <property name="ERROR_MESSAGE" expression="get-property('ERROR_MESSAGE')"/>
+      </log>
+      <drop/>
+   </sequence>
+   <sequence name="main">
+      <log/>
+      <drop/>
+   </sequence>
+</definitions>

@@ -1,0 +1,14 @@
+//exchange,queue, routing key declare
+<endpoint>
+               <address uri="rabbitmq:/AMQPProxy?rabbitmq.server.host.name=localhost&amp;rabbitmq.server.port=5672&amp;rabbitmq.queue.name=queue7&amp;rabbitmq.exchange.name=exchange7&amp;rabbitmq.queue.routing.key=routeKey"/>
+            </endpoint>
+
+//queue_options
+               <address uri="rabbitmq:/AMQPProxy?rabbitmq.server.host.name=localhost&amp;rabbitmq.server.port=5672&amp;rabbitmq.queue.name=queue9&amp;rabbitmq.exchange.name=exchange7&amp;rabbitmq.queue.routing.key=routeKey&amp;rabbitmq.exchange.durable=true"/>
+	       <address uri="rabbitmq:/AMQPProxy?rabbitmq.server.host.name=localhost&amp;rabbitmq.server.port=5672&amp;rabbitmq.queue.name=queue8&amp;rabbitmq.exchange.name=exchange7&amp;rabbitmq.queue.routing.key=routeKey&amp;rabbitmq.queue.auto.delete=true"/>
+               <address uri="rabbitmq:/AMQPProxy?rabbitmq.server.host.name=localhost&amp;rabbitmq.server.port=5672&amp;rabbitmq.queue.name=queue7&amp;rabbitmq.exchange.name=exchange7&amp;rabbitmq.queue.routing.key=routeKey&amp;rabbitmq.queue.exclusive=true"/>
+
+
+//exchange_options
+               <address uri="rabbitmq:/AMQPProxy?rabbitmq.server.host.name=localhost&amp;rabbitmq.server.port=5672&amp;rabbitmq.queue.name=queue22&amp;rabbitmq.exchange.name=exchange22&amp;rabbitmq.exchange.type=fanout"/>
+

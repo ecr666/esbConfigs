@@ -1,0 +1,18 @@
+<ns:getQuoteResponse xmlns:ns="http://services.samples">
+   <ns:return xmlns:ax21="http://services.samples/xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="ax21:GetQuoteResponse">
+      <ax21:change>3.8881753247331425</ax21:change>
+      <ax21:earnings>13.744374098703943</ax21:earnings>
+      <ax21:high>-69.7238743165169</ax21:high>
+      <ax21:last>71.10999771229658</ax21:last>
+      <ax21:lastTradeTimestamp>Sun Mar 29 09:26:51 IST 2015</ax21:lastTradeTimestamp>
+      <ax21:low>-69.72543862654013</ax21:low>
+      <ax21:marketCap>4.383339919652716E7</ax21:marketCap>
+      <ax21:name>IBM Company</ax21:name>
+      <ax21:open>73.46237313592839</ax21:open>
+      <ax21:peRatio>-19.675448151682442</ax21:peRatio>
+      <ax21:percentageChange>-5.5266761980240515</ax21:percentageChange>
+      <ax21:prevClose>-70.35287006905305</ax21:prevClose>
+      <ax21:symbol>IBM</ax21:symbol>
+      <ax21:volume>9040</ax21:volume>
+   </ns:return>
+</ns:getQuoteResponse>

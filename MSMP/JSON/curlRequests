@@ -1,0 +1,8 @@
+curl -v -d @getClient.json -H "Content-Type:application/json" http://localhost:8280/clientservice/jsontest
+
+curl -v -d @getClient.xml -H "Content-type: application/xml" http://localhost:8280/clientservice/tsystem
+
+# To add a new client use this
+curl -v -d @addClient.xml -H "Content-type: text/xml" http://localhost:8280/testservice/clients
+
+
